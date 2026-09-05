@@ -44,6 +44,7 @@ import com.example.ui.theme.ClayCardBorder
 import com.example.ui.theme.ClayCardHighlight
 import com.example.ui.theme.ClayCardSurface
 import com.example.ui.theme.HeaderBlue
+import com.example.ui.theme.HeaderBlueDark
 import com.example.ui.theme.PdfRed
 import com.example.ui.theme.TextMuted
 import com.example.ui.theme.TextNavyDark
@@ -175,67 +176,7 @@ fun SolutionAndShareSection(
             }
         }
 
-        // 2. WhatsApp Sharing Card
-        ClayCard(
-            modifier = Modifier.fillMaxWidth(),
-            cornerRadius = 24.dp,
-            elevation = 5.dp,
-            testTag = "whatsapp_card"
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(18.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(CircleShape)
-                            .background(WhatsAppGreen.copy(alpha = 0.15f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Send,
-                            contentDescription = null,
-                            tint = WhatsAppGreenDark,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
-                    Text(
-                        text = "مشاركة المسألة والحل عبر واتساب",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextNavyDark
-                    )
-                }
-
-                ClayInputField(
-                    value = whatsappPhone,
-                    onValueChange = { whatsappPhone = it },
-                    label = "رقم المستلم (اختياري)",
-                    placeholder = "مثال: 771134103 أو +967...",
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    testTag = "whatsapp_phone_input"
-                )
-
-                ClayButton(
-                    text = "إرسال عبر واتساب",
-                    icon = Icons.Default.Send,
-                    backgroundColor = WhatsAppGreenDark,
-                    onClick = {
-                        SharingUtils.shareViaWhatsApp(context, whatsappPhone, mathResult)
-                    },
-                    testTag = "whatsapp_share_button"
-                )
-            }
-        }
-
-        // 3. PDF Export Card
+        // 2. Direct PDF Save to Phone Card
         ClayCard(
             modifier = Modifier.fillMaxWidth(),
             cornerRadius = 24.dp,
@@ -250,11 +191,11 @@ fun SolutionAndShareSection(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(32.dp)
+                            .size(36.dp)
                             .clip(CircleShape)
                             .background(PdfRed.copy(alpha = 0.15f)),
                         contentAlignment = Alignment.Center
@@ -263,32 +204,141 @@ fun SolutionAndShareSection(
                             imageVector = Icons.Default.PictureAsPdf,
                             contentDescription = null,
                             tint = PdfRed,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(22.dp)
                         )
                     }
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "تصدير المستند كملف PDF",
+                            text = "حفظ المسألة والحل بملف PDF في الهاتف",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = TextNavyDark
                         )
                         Text(
-                            text = "يتضمن ترويسة DR/MALIK وخاتمة الحقوق الرسمية",
+                            text = "يتم حفظ المسألة مع معطياتها وخطواتها بالكامل وترويسة DR/MALIK",
+                            fontSize = 12.sp,
+                            color = TextMuted,
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
+
+                // Primary Save Button
+                ClayButton(
+                    text = "💾 حفظ ملف الـ PDF في الهاتف (التنزيلات)",
+                    icon = Icons.Default.PictureAsPdf,
+                    backgroundColor = PdfRed,
+                    onClick = {
+                        SharingUtils.savePdfToDevice(context, mathResult)
+                    },
+                    testTag = "pdf_save_download_button"
+                )
+
+                // Secondary Open and Share row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    ClayButton(
+                        text = "📄 فتح ومعاينة PDF",
+                        icon = Icons.Default.PictureAsPdf,
+                        backgroundColor = Color(0xFF5B6B79),
+                        onClick = {
+                            SharingUtils.openPdfFile(context, mathResult)
+                        },
+                        modifier = Modifier.weight(1f),
+                        testTag = "pdf_open_button"
+                    )
+
+                    ClayButton(
+                        text = "📤 مشاركة الـ PDF",
+                        icon = Icons.Default.Share,
+                        backgroundColor = HeaderBlueDark,
+                        onClick = {
+                            SharingUtils.exportAndSharePdf(context, mathResult)
+                        },
+                        modifier = Modifier.weight(1f),
+                        testTag = "pdf_export_button"
+                    )
+                }
+            }
+        }
+
+        // 3. WhatsApp PDF and Message Sending Card
+        ClayCard(
+            modifier = Modifier.fillMaxWidth(),
+            cornerRadius = 24.dp,
+            elevation = 5.dp,
+            testTag = "whatsapp_card"
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(WhatsAppGreen.copy(alpha = 0.15f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Send,
+                            contentDescription = null,
+                            tint = WhatsAppGreenDark,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "إرسال المسألة كملف PDF إلى واتساب",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TextNavyDark
+                        )
+                        Text(
+                            text = "أدخل رقم الهاتف لإرسال الملف والمحتوى مباشرة",
                             fontSize = 12.sp,
                             color = TextMuted
                         )
                     }
                 }
 
+                ClayInputField(
+                    value = whatsappPhone,
+                    onValueChange = { whatsappPhone = it },
+                    label = "رقم هاتف المستلم (واتساب)",
+                    placeholder = "مثال: 771134103 أو +967...",
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    testTag = "whatsapp_phone_input"
+                )
+
+                // Primary Send PDF via WhatsApp
                 ClayButton(
-                    text = "حفظ ومشاركة كملف PDF",
+                    text = "📲 إرسال ملف PDF للمسألة عبر واتساب",
                     icon = Icons.Default.PictureAsPdf,
-                    backgroundColor = PdfRed,
+                    backgroundColor = WhatsAppGreenDark,
                     onClick = {
-                        SharingUtils.exportAndSharePdf(context, mathResult)
+                        SharingUtils.sendPdfViaWhatsApp(context, whatsappPhone, mathResult)
                     },
-                    testTag = "pdf_export_button"
+                    testTag = "whatsapp_pdf_send_button"
+                )
+
+                // Secondary Send Text directly to phone number
+                ClayButton(
+                    text = "💬 إرسال نص المسألة لرقم الهاتف (واتساب)",
+                    icon = Icons.Default.Send,
+                    backgroundColor = Color(0xFF208A56),
+                    onClick = {
+                        SharingUtils.shareViaWhatsApp(context, whatsappPhone, mathResult)
+                    },
+                    testTag = "whatsapp_share_button"
                 )
             }
         }

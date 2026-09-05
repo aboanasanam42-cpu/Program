@@ -270,9 +270,9 @@ fun MainHeaderBar(
 
 /**
  * Main Screen Footer: 4-line credits matching user specification:
- * فكرة الاستاذ محمد الرمامة
- * مصحح فكرة الاستاذ مطهر الرمامة
- * تصميم وبرمجة الدكتور مالك الرمامة
+ * فكرة الاستاذ محمد الرميمة
+ * مصحح فكرة الاستاذ مطهر الرميمة
+ * تصميم وبرمجة الدكتور مالك الرميمة
  * هاتف 771134103
  */
 @Composable
@@ -294,21 +294,21 @@ fun MainFooterCard(
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Text(
-                text = "فكرة الأستاذ / محمد الرمامة",
+                text = "فكرة الأستاذ / محمد الرميمة",
                 fontSize = 17.5.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextNavyDark,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "مصحح فكرة الأستاذ / مطهر الرمامة",
+                text = "مصحح فكرة الأستاذ / مطهر الرميمة",
                 fontSize = 16.5.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextNavyDark,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "تصميم وبرمجة الدكتور / مالك الرمامة",
+                text = "تصميم وبرمجة الدكتور / مالك الرميمة",
                 fontSize = 16.5.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextNavyDark,
@@ -391,7 +391,7 @@ fun SubScreenBrandingFooter(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "تصميم وبرمجة الدكتور / مالك الرمامة - هاتف / 771134103",
+                text = "تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103",
                 fontSize = 13.5.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextNavyDark,

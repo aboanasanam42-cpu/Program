@@ -1,7 +1,9 @@
 package com.example.utils
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -11,6 +13,7 @@ import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextDirectionHeuristics
@@ -27,7 +30,175 @@ import java.util.Locale
 
 object SharingUtils {
 
-    const val PERMANENT_FOOTER = "فكرة أ/ محمد الرمامة | مصحح الفكرة أ/ مطهر الرمامة | تصميم د/ مالك الرمامة - 771134103"
+    const val PERMANENT_FOOTER = "فكرة أ/ محمد الرميمة | مصحح الفكرة أ/ مطهر الرميمة | تصميم وبرمجة د/ مالك الرميمة - 771134103"
+
+    /**
+     * Creates a PDF file in app cache and returns the File object
+     */
+    fun createPdfFile(context: Context, mathResult: MathResult): File {
+        val pdfDocument = PdfDocument()
+        val pageWidth = 595
+        val pageHeight = 842
+        val pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
+        val page = pdfDocument.startPage(pageInfo)
+        val canvas = page.canvas
+
+        drawPdfContent(canvas, pageWidth, pageHeight, mathResult)
+
+        pdfDocument.finishPage(page)
+
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val safeTitle = mathResult.title.replace(Regex("[^a-zA-Z0-9\\u0600-\\u06FF_\\-]"), "_").take(25)
+        val pdfFileName = "مسألة_${safeTitle}_$timeStamp.pdf"
+        val outputDir = File(context.cacheDir, "shared_docs")
+        if (!outputDir.exists()) outputDir.mkdirs()
+        val pdfFile = File(outputDir, pdfFileName)
+
+        val outputStream = FileOutputStream(pdfFile)
+        pdfDocument.writeTo(outputStream)
+        outputStream.flush()
+        outputStream.close()
+        pdfDocument.close()
+
+        return pdfFile
+    }
+
+    /**
+     * Saves the PDF file directly to device storage (Downloads folder)
+     */
+    fun savePdfToDevice(context: Context, mathResult: MathResult): File? {
+        try {
+            val cachedFile = createPdfFile(context, mathResult)
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+            val safeTitle = mathResult.title.replace(Regex("[^a-zA-Z0-9\\u0600-\\u06FF_\\-]"), "_").take(25)
+            val pdfFileName = "مسألة_${safeTitle}_$timeStamp.pdf"
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, pdfFileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/DR_MALIK_Math")
+                }
+                val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+                if (uri != null) {
+                    context.contentResolver.openOutputStream(uri)?.use { outStream ->
+                        cachedFile.inputStream().use { inStream ->
+                            inStream.copyTo(outStream)
+                        }
+                    }
+                }
+            } else {
+                @Suppress("DEPRECATION")
+                val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                val targetDir = File(downloadsDir, "DR_MALIK_Math")
+                if (!targetDir.exists()) targetDir.mkdirs()
+                val destFile = File(targetDir, pdfFileName)
+                cachedFile.copyTo(destFile, overwrite = true)
+            }
+
+            Toast.makeText(
+                context,
+                "✅ تم حفظ ملف الـ PDF بنجاح في مجلد التنزيلات (Downloads/DR_MALIK_Math)",
+                Toast.LENGTH_LONG
+            ).show()
+
+            return cachedFile
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "خطأ أثناء حفظ ملف PDF: ${e.message}", Toast.LENGTH_LONG).show()
+            return null
+        }
+    }
+
+    /**
+     * Opens the generated PDF in an external viewer application
+     */
+    fun openPdfFile(context: Context, mathResult: MathResult) {
+        try {
+            val pdfFile = createPdfFile(context, mathResult)
+            val contentUri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                pdfFile
+            )
+
+            val openIntent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(contentUri, "application/pdf")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
+            context.startActivity(Intent.createChooser(openIntent, "فتح ملف PDF بواسطة"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "تعذر فتح ملف PDF: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /**
+     * Sends the PDF document via WhatsApp to a contact or chat
+     */
+    fun sendPdfViaWhatsApp(context: Context, phoneNumber: String, mathResult: MathResult) {
+        try {
+            val pdfFile = createPdfFile(context, mathResult)
+            val contentUri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                pdfFile
+            )
+
+            val cleanPhone = phoneNumber.replace(Regex("[^0-9+]"), "").trim()
+            val phoneNote = if (cleanPhone.isNotEmpty()) "للرقم: $cleanPhone\n" else ""
+
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "application/pdf"
+                putExtra(Intent.EXTRA_STREAM, contentUri)
+                putExtra(Intent.EXTRA_SUBJECT, "حل مسألة: ${mathResult.title}")
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    "📄 *مرفق ملف PDF لحل مسألة:* ${mathResult.title}\n" +
+                    phoneNote +
+                    "📝 *معطيات المسألة:*\n${mathResult.problemSummary}\n" +
+                    "✅ *النتيجة:* ${mathResult.finalAnswer}\n\n" +
+                    PERMANENT_FOOTER
+                )
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
+            val pm = context.packageManager
+            val isWhatsAppStandard = isAppInstalled(pm, "com.whatsapp")
+            val isWhatsAppBusiness = isAppInstalled(pm, "com.whatsapp.w4b")
+
+            if (isWhatsAppStandard) {
+                shareIntent.setPackage("com.whatsapp")
+            } else if (isWhatsAppBusiness) {
+                shareIntent.setPackage("com.whatsapp.w4b")
+            }
+
+            context.startActivity(Intent.createChooser(shareIntent, "إرسال ملف PDF عبر واتساب"))
+
+            if (cleanPhone.isNotEmpty()) {
+                Toast.makeText(
+                    context,
+                    "تم إرفاق ملف PDF للمسألة. يرجى اختيار جهة الاتصال في واتساب للإرسال",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            exportAndSharePdf(context, mathResult)
+        }
+    }
+
+    private fun isAppInstalled(pm: PackageManager, packageName: String): Boolean {
+        return try {
+            pm.getPackageInfo(packageName, 0)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 
     fun shareViaWhatsApp(context: Context, phoneNumber: String, mathResult: MathResult) {
         val cleanPhone = phoneNumber.replace(Regex("[^0-9+]"), "").trim()
@@ -36,7 +207,6 @@ object SharingUtils {
         try {
             val encodedText = URLEncoder.encode(text, "UTF-8")
             val whatsappUri = if (cleanPhone.isNotEmpty()) {
-                // If phone doesn't start with '+', check if it's 9 digits starting with 7 (Yemen standard)
                 val finalPhone = when {
                     cleanPhone.startsWith("+") -> cleanPhone.substring(1)
                     cleanPhone.startsWith("00") -> cleanPhone.substring(2)
@@ -53,7 +223,6 @@ object SharingUtils {
             }
             context.startActivity(intent)
         } catch (e: Exception) {
-            // Fallback to standard share sheet
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, text)
@@ -65,38 +234,13 @@ object SharingUtils {
 
     fun exportAndSharePdf(context: Context, mathResult: MathResult) {
         try {
-            val pdfDocument = PdfDocument()
-            val pageWidth = 595
-            val pageHeight = 842
-            val pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
-            val page = pdfDocument.startPage(pageInfo)
-            val canvas = page.canvas
-
-            drawPdfContent(canvas, pageWidth, pageHeight, mathResult)
-
-            pdfDocument.finishPage(page)
-
-            // Save PDF to cache directory for safe FileProvider sharing
-            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-            val pdfFileName = "Math_Solution_$timeStamp.pdf"
-            val outputDir = File(context.cacheDir, "shared_docs")
-            if (!outputDir.exists()) outputDir.mkdirs()
-            val pdfFile = File(outputDir, pdfFileName)
-
-            val outputStream = FileOutputStream(pdfFile)
-            pdfDocument.writeTo(outputStream)
-            outputStream.flush()
-            outputStream.close()
-            pdfDocument.close()
-
-            // Generate content URI via FileProvider
+            val pdfFile = createPdfFile(context, mathResult)
             val contentUri: Uri = FileProvider.getUriForFile(
                 context,
                 "${context.packageName}.fileprovider",
                 pdfFile
             )
 
-            // Share intent
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "application/pdf"
                 putExtra(Intent.EXTRA_STREAM, contentUri)
@@ -281,3 +425,4 @@ object SharingUtils {
         canvas.drawText(PERMANENT_FOOTER, width / 2f, height - 16f, paint)
     }
 }
+

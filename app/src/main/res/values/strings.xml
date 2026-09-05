@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">DR/MALIK Math</string>
     <string name="main_header_title">DR/MALIK</string>
-    <string name="footer_idea">فكرة الأستاذ / محمد الرمامة</string>
-    <string name="footer_reviewer">مصحح فكرة الأستاذ / مطهر الرمامة</string>
-    <string name="footer_dev">تصميم وبرمجة الدكتور / مالك الرمامة</string>
+    <string name="footer_idea">فكرة الأستاذ / محمد الرميمة</string>
+    <string name="footer_reviewer">مصحح فكرة الأستاذ / مطهر الرميمة</string>
+    <string name="footer_dev">تصميم وبرمجة الدكتور / مالك الرميمة</string>
     <string name="footer_phone">هاتف / 771134103</string>
-    <string name="shared_footer_brand">تصميم وبرمجة الدكتور / مالك الرمامة - هاتف / 771134103</string>
+    <string name="shared_footer_brand">تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103</string>
 </resources>
