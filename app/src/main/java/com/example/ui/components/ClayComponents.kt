@@ -1,5 +1,7 @@
 package com.example.ui.components
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
@@ -26,6 +28,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -43,6 +46,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
@@ -270,6 +274,7 @@ fun MainHeaderBar(
 fun MainFooterCard(
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     ClayCard(
         modifier = modifier
             .fillMaxWidth(),
@@ -298,13 +303,36 @@ fun MainFooterCard(
                 color = TextNavyDark,
                 textAlign = TextAlign.Center
             )
-            Text(
-                text = "هاتف / 771134103",
-                fontSize = 17.sp,
-                fontWeight = FontWeight.Bold,
-                color = HeaderBlueDark,
-                textAlign = TextAlign.Center
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable {
+                        try {
+                            val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:771134103"))
+                            context.startActivity(dialIntent)
+                        } catch (e: Exception) {
+                            // ignore
+                        }
+                    }
+                    .padding(horizontal = 10.dp, vertical = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Phone,
+                    contentDescription = "اتصال",
+                    tint = HeaderBlueDark,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = "هاتف / 771134103",
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = HeaderBlueDark,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
@@ -316,20 +344,43 @@ fun MainFooterCard(
 fun SubScreenBrandingFooter(
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     ClayCard(
         modifier = modifier.fillMaxWidth(),
         cornerRadius = 16.dp,
         elevation = 3.dp,
         backgroundColor = Color(0xFFF3F8FC)
     ) {
-        Text(
-            text = "تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103",
-            fontSize = 13.5.sp,
-            fontWeight = FontWeight.Bold,
-            color = TextNavyDark,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(vertical = 10.dp, horizontal = 14.dp)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    try {
+                        val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:771134103"))
+                        context.startActivity(dialIntent)
+                    } catch (e: Exception) {
+                        // ignore
+                    }
+                }
+                .padding(vertical = 10.dp, horizontal = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.Phone,
+                contentDescription = null,
+                tint = HeaderBlueDark,
+                modifier = Modifier.size(14.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = "تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103",
+                fontSize = 13.5.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextNavyDark,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 

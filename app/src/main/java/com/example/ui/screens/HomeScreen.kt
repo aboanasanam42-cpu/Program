@@ -30,7 +30,15 @@ import com.example.ui.components.MainHeaderBar
 import com.example.ui.components.ProportionsIcon
 import com.example.ui.components.RatioIcon
 import com.example.ui.components.TriangleSimilarityIcon
+import com.example.ui.theme.ExponentCoral
+import com.example.ui.theme.ExponentCoralLight
+import com.example.ui.theme.ProportionWood
+import com.example.ui.theme.ProportionWoodLight
+import com.example.ui.theme.RatioTeal
+import com.example.ui.theme.RatioTealLight
 import com.example.ui.theme.TextNavyDark
+import com.example.ui.theme.TriangleBlue
+import com.example.ui.theme.TriangleBlueLight
 
 enum class MathSection {
     HOME,
@@ -82,13 +90,15 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Card 1: تشابه المثلثات
+                        // Card 1: تشابه المثلثات (Pastel Blue)
                         ClayCard(
                             modifier = Modifier
                                 .weight(1f)
                                 .aspectRatio(0.92f),
                             cornerRadius = 28.dp,
-                            elevation = 7.dp,
+                            elevation = 8.dp,
+                            backgroundColor = TriangleBlueLight,
+                            borderColor = TriangleBlue.copy(alpha = 0.45f),
                             onClick = { onNavigateToSection(MathSection.TRIANGLE_SIMILARITY) },
                             testTag = "card_triangle_similarity"
                         ) {
@@ -112,13 +122,15 @@ fun HomeScreen(
                             }
                         }
 
-                        // Card 2: التناسب
+                        // Card 2: التناسب (Pastel Peach/Wood)
                         ClayCard(
                             modifier = Modifier
                                 .weight(1f)
                                 .aspectRatio(0.92f),
                             cornerRadius = 28.dp,
-                            elevation = 7.dp,
+                            elevation = 8.dp,
+                            backgroundColor = ProportionWoodLight,
+                            borderColor = ProportionWood.copy(alpha = 0.45f),
                             onClick = { onNavigateToSection(MathSection.PROPORTIONS) },
                             testTag = "card_proportions"
                         ) {
@@ -147,13 +159,15 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Card 3: النسبة
+                        // Card 3: النسبة (Pastel Teal)
                         ClayCard(
                             modifier = Modifier
                                 .weight(1f)
                                 .aspectRatio(0.92f),
                             cornerRadius = 28.dp,
-                            elevation = 7.dp,
+                            elevation = 8.dp,
+                            backgroundColor = RatioTealLight,
+                            borderColor = RatioTeal.copy(alpha = 0.45f),
                             onClick = { onNavigateToSection(MathSection.RATIOS) },
                             testTag = "card_ratios"
                         ) {
@@ -176,13 +190,15 @@ fun HomeScreen(
                             }
                         }
 
-                        // Card 4: الأسس والجذور
+                        // Card 4: الأسس والجذور (Pastel Coral)
                         ClayCard(
                             modifier = Modifier
                                 .weight(1f)
                                 .aspectRatio(0.92f),
                             cornerRadius = 28.dp,
-                            elevation = 7.dp,
+                            elevation = 8.dp,
+                            backgroundColor = ExponentCoralLight,
+                            borderColor = ExponentCoral.copy(alpha = 0.45f),
                             onClick = { onNavigateToSection(MathSection.EXPONENTS_RADICALS) },
                             testTag = "card_exponents_radicals"
                         ) {
