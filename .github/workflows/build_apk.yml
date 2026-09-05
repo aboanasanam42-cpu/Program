@@ -7,6 +7,9 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build Android APK (SDK 35)
@@ -35,7 +38,7 @@ jobs:
             echo "KEYSTORE_PATH=${{ github.workspace }}/my-upload-key.jks" >> $GITHUB_ENV
             echo "HAS_KEYSTORE=true" >> $GITHUB_ENV
           else
-            echo "No custom keystore secret found. Will generate release or debug APK."
+            echo "No custom keystore secret found. Will use signed fallback APK."
             echo "HAS_KEYSTORE=false" >> $GITHUB_ENV
           fi
 
@@ -45,12 +48,11 @@ jobs:
             chmod +x gradlew
           fi
 
-      - name: 🚀 Build APK (Release & Debug Fallback)
+      - name: 🚀 Build APK
         env:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           GRADLE_CMD="./gradlew"
           if [ ! -f "./gradlew" ]; then
@@ -63,7 +65,7 @@ jobs:
             $GRADLE_CMD assembleRelease --stacktrace
           else
             echo "Building APK..."
-            $GRADLE_CMD assembleDebug assembleRelease || $GRADLE_CMD assembleDebug --stacktrace
+            $GRADLE_CMD assembleDebug assembleRelease --stacktrace || $GRADLE_CMD assembleDebug --stacktrace
           fi
 
       - name: 📦 Prepare APK Artifacts for Upload
@@ -74,25 +76,50 @@ jobs:
           echo "Found APK files in output directory:"
           ls -la build_output/
           
-          # Rename release or debug APK for clean download
-          if [ -f build_output/*release*.apk ]; then
-            cp build_output/*release*.apk build_output/app-release.apk
-          elif [ -f build_output/*debug*.apk ]; then
-            cp build_output/*debug*.apk build_output/app-release.apk
-          fi
+          # Standardize primary APK name for direct download
+          for f in build_output/*release*.apk build_output/*debug*.apk; do
+            if [ -f "$f" ]; then
+              cp "$f" build_output/DR-MALIK-Math.apk
+              break
+            fi
+          done
 
-      - name: 📤 Upload APK Artifact (Direct Download Link)
+      - name: 📤 Upload APK Artifact (Download via GitHub UI)
         uses: actions/upload-artifact@v4
         with:
-          name: DR_MALIK_Math_APK_v1.0
+          name: DR_MALIK_Math_APK
           path: build_output/*.apk
           if-no-files-found: error
           retention-days: 30
 
+      - name: 🌐 Create GitHub Release with Direct APK Download Link
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          tag_name: v1.0
+          name: "DR/MALIK Math App v1.0"
+          body: |
+            ## تطبيق الرياضيات التفاعلي - DR/MALIK
+            - **إصدار التطبيق:** v1.0
+            - **نظام التشغيل المدعوم:** أندرويد (Android 7.0+ حتى Android 15)
+            - **رابط التحميل المباشر للـ APK:**
+            👉 [تحميل DR-MALIK-Math.apk](https://github.com/${{ github.repository }}/releases/download/v1.0/DR-MALIK-Math.apk)
+            
+            ---
+            - فكرة: أ / محمد الرميمة
+            - تصميم وبرمجة: د / مالك الرميمة
+            - هاتف: 771134103
+          files: build_output/DR-MALIK-Math.apk
+          token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
       - name: 📋 Summary Output
         run: |
-          echo "### 🚀 Build Successful!" >> $GITHUB_STEP_SUMMARY
-          echo "- **Application:** DR/MALIK Math (تطبيق الرياضيات التفاعلي)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Target SDK:** Android 15 (API Level 35)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Artifact:** APK is available for download in the **Artifacts** section above." >> $GITHUB_STEP_SUMMARY
-          echo "- **Footer Brand:** تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚀 تم بناء تطبيق DR/MALIK بنجاح!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- 📱 **اسم التطبيق:** DR/MALIK Math (تطبيق الرياضيات التفاعلي)" >> $GITHUB_STEP_SUMMARY
+          echo "- 🎯 **نظام التشغيل:** أندرويد 15 (API 35)" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔗 **رابط التحميل المباشر للـ APK:** [تحميل DR-MALIK-Math.apk](https://github.com/${{ github.repository }}/releases/download/v1.0/DR-MALIK-Math.apk)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 **التحميل من صفحة الـ Action:** اضغط على زر التحميل في قسم **Artifacts** في أعلى الصفحة." >> $GITHUB_STEP_SUMMARY
+          echo "- 📞 **بيانات المطور:** تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103" >> $GITHUB_STEP_SUMMARY
+
