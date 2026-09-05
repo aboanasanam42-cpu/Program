@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -224,11 +225,13 @@ fun HomeScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
-                // 3. Bottom Footer Card with 3-line attribution
+                // 3. Bottom Footer Card with 4-line attribution raised comfortably upwards
                 MainFooterCard(
-                    modifier = Modifier.padding(bottom = 6.dp)
+                    modifier = Modifier
+                        .navigationBarsPadding()
+                        .padding(bottom = 26.dp)
                 )
             }
         }

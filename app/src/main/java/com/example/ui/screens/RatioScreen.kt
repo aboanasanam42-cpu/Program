@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -67,7 +68,11 @@ fun RatioScreen(
         modifier = modifier.fillMaxSize(),
         containerColor = ClayBackground,
         bottomBar = {
-            Box(modifier = Modifier.padding(16.dp)) {
+            Box(
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 14.dp)
+            ) {
                 SubScreenBrandingFooter()
             }
         }

@@ -22,7 +22,7 @@ data class MathResult(
         sb.appendLine("✅ *النتيجة النهائية:*")
         sb.appendLine(finalAnswer)
         sb.appendLine("━━━━━━━━━━━━━━━━━━━")
-        sb.appendLine("✨ تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103")
+        sb.appendLine("✨ فكرة أ/ محمد الرمامة | مصحح الفكرة أ/ مطهر الرمامة | تصميم وبرمجة د/ مالك الرمامة - 771134103")
         return sb.toString()
     }
 }

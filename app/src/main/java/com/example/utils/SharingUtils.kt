@@ -27,7 +27,7 @@ import java.util.Locale
 
 object SharingUtils {
 
-    const val PERMANENT_FOOTER = "تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103"
+    const val PERMANENT_FOOTER = "فكرة أ/ محمد الرمامة | مصحح الفكرة أ/ مطهر الرمامة | تصميم د/ مالك الرمامة - 771134103"
 
     fun shareViaWhatsApp(context: Context, phoneNumber: String, mathResult: MathResult) {
         val cleanPhone = phoneNumber.replace(Regex("[^0-9+]"), "").trim()

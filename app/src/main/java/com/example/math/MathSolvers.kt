@@ -99,6 +99,103 @@ object MathSolvers {
         )
     }
 
+    // -------------------------------------------------------------
+    // إيجاد مساحة المثلث (Triangle Area Calculations)
+    // -------------------------------------------------------------
+    fun calculateTriangleAreaBaseHeight(base: Double, height: Double, scaleFactorK: Double? = null): MathResult {
+        val steps = mutableListOf<String>()
+        if (base <= 0 || height <= 0) {
+            return MathResult(
+                title = "أوجد مساحة المثلث",
+                problemSummary = "القاعدة: ${formatNumber(base)} ، الارتفاع: ${formatNumber(height)}",
+                steps = listOf("يجب أن تكون قيمتا القاعدة والارتفاع أكبر من الصفر."),
+                finalAnswer = "قيم غير صحيحة"
+            )
+        }
+
+        val area = 0.5 * base * height
+        val areaFormatted = formatNumber(area)
+
+        steps.add("قانون مساحة المثلث: المساحة = ½ × طول القاعدة × الارتفاع")
+        steps.add("التعويض بالقيم: المساحة = 0.5 × ${formatNumber(base)} × ${formatNumber(height)}")
+        steps.add("حساب الناتج: المساحة = $areaFormatted وحدة مربعة")
+
+        var finalAns = "مساحة المثلث = $areaFormatted وحدة مربعة"
+
+        if (scaleFactorK != null && scaleFactorK > 0) {
+            val kSquared = scaleFactorK * scaleFactorK
+            val similarArea = area * kSquared
+            steps.add("بما أن نسبة المساحات في المثلثات المتشابهة = k² (مربع معامل التشابه):")
+            steps.add("k² = (${formatNumber(scaleFactorK)})² = ${formatNumber(kSquared)}")
+            steps.add("مساحة المثلث المشابه الثاني = مساحة المثلث الأول × k² = $areaFormatted × ${formatNumber(kSquared)} = ${formatNumber(similarArea)}")
+            finalAns += "\nمساحة المثلث المشابه (معامل k = ${formatNumber(scaleFactorK)}): ${formatNumber(similarArea)} وحدة مربعة"
+        }
+
+        return MathResult(
+            title = "أوجد مساحة المثلث (بمعلومية القاعدة والارتفاع)",
+            problemSummary = "طول القاعدة = ${formatNumber(base)}\nالارتفاع = ${formatNumber(height)}" +
+                    (if (scaleFactorK != null && scaleFactorK > 0) "\nمعامل التشابه k = ${formatNumber(scaleFactorK)}" else ""),
+            steps = steps,
+            finalAnswer = finalAns
+        )
+    }
+
+    fun calculateTriangleAreaHeron(a: Double, b: Double, c: Double, scaleFactorK: Double? = null): MathResult {
+        val steps = mutableListOf<String>()
+        if (a <= 0 || b <= 0 || c <= 0) {
+            return MathResult(
+                title = "أوجد مساحة المثلث",
+                problemSummary = "الأضلاع: أ = ${formatNumber(a)} ، ب = ${formatNumber(b)} ، ج = ${formatNumber(c)}",
+                steps = listOf("يجب أن تكون أطوال الأضلاع الثلاثة أعداداً موجبة تماماً."),
+                finalAnswer = "أطوال غير صحيحة"
+            )
+        }
+
+        // Check triangle inequality
+        if (a + b <= c || a + c <= b || b + c <= a) {
+            return MathResult(
+                title = "أوجد مساحة المثلث (صيغة هيرون)",
+                problemSummary = "الأضلاع: (${formatNumber(a)}، ${formatNumber(b)}، ${formatNumber(c)})",
+                steps = listOf(
+                    "التحقق من متباينة المثلث: مجموع طولي أي ضلعين يجب أن يكون أكبر من طول الضلع الثالث.",
+                    "هذه الأطوال لا تشكّل مثلثاً لأن مجموع الضلعين لا يتجاوز طول الضلع الثالث."
+                ),
+                finalAnswer = "الأطوال المدخلة لا تمثل مثلثاً حقيقياً"
+            )
+        }
+
+        val perimeter = a + b + c
+        val s = perimeter / 2.0
+        val areaSquared = s * (s - a) * (s - b) * (s - c)
+        val area = sqrt(areaSquared)
+        val areaFormatted = formatNumber(area)
+
+        steps.add("حساب محيط المثلث: المحيط = ${formatNumber(a)} + ${formatNumber(b)} + ${formatNumber(c)} = ${formatNumber(perimeter)}")
+        steps.add("حساب نصف المحيط (s): s = المحيط ÷ 2 = ${formatNumber(perimeter)} ÷ 2 = ${formatNumber(s)}")
+        steps.add("صيغة هيرون (Heron's Formula): المساحة = √(s × (s - أ) × (s - ب) × (s - ج))")
+        steps.add("التعويض: المساحة = √(${formatNumber(s)} × (${formatNumber(s)} - ${formatNumber(a)}) × (${formatNumber(s)} - ${formatNumber(b)}) × (${formatNumber(s)} - ${formatNumber(c)}))")
+        steps.add("حاصل الضرب داخل الجذر = ${formatNumber(areaSquared)}")
+        steps.add("جذر الناتج: المساحة = $areaFormatted وحدة مربعة")
+
+        var finalAns = "مساحة المثلث = $areaFormatted وحدة مربعة"
+
+        if (scaleFactorK != null && scaleFactorK > 0) {
+            val kSquared = scaleFactorK * scaleFactorK
+            val similarArea = area * kSquared
+            steps.add("نسبة مساحتي المثلثين المتشابهين تساوي k²:")
+            steps.add("مساحة المثلث المشابه = $areaFormatted × (${formatNumber(scaleFactorK)})² = ${formatNumber(similarArea)}")
+            finalAns += "\nمساحة المثلث المشابه الثاني = ${formatNumber(similarArea)} وحدة مربعة"
+        }
+
+        return MathResult(
+            title = "أوجد مساحة المثلث (صيغة هيرون للأضلاع الثلاثة)",
+            problemSummary = "أطوال أضلاع المثلث: أ = ${formatNumber(a)} ، ب = ${formatNumber(b)} ، ج = ${formatNumber(c)}" +
+                    (if (scaleFactorK != null && scaleFactorK > 0) "\nمعامل التشابه k = ${formatNumber(scaleFactorK)}" else ""),
+            steps = steps,
+            finalAnswer = finalAns
+        )
+    }
+
     fun verifyTriangleSimilaritySSS(
         a1: Double, b1: Double, c1: Double,
         a2: Double, b2: Double, c2: Double

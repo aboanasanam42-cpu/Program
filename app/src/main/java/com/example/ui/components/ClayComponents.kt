@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -268,7 +269,11 @@ fun MainHeaderBar(
 }
 
 /**
- * Main Screen Footer: 3-line credits matching the reference design
+ * Main Screen Footer: 4-line credits matching user specification:
+ * فكرة الاستاذ محمد الرمامة
+ * مصحح فكرة الاستاذ مطهر الرمامة
+ * تصميم وبرمجة الدكتور مالك الرمامة
+ * هاتف 771134103
  */
 @Composable
 fun MainFooterCard(
@@ -276,38 +281,46 @@ fun MainFooterCard(
 ) {
     val context = LocalContext.current
     ClayCard(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         cornerRadius = 24.dp,
-        elevation = 5.dp,
+        elevation = 6.dp,
         borderColor = ClayCardBorder
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 14.dp, horizontal = 16.dp),
+                .padding(vertical = 16.dp, horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Text(
-                text = "فكرة أ / محمد الرميمة",
-                fontSize = 18.sp,
+                text = "فكرة الأستاذ / محمد الرمامة",
+                fontSize = 17.5.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextNavyDark,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "تصميم وبرمجة / مالك الرميمة",
-                fontSize = 17.sp,
+                text = "مصحح فكرة الأستاذ / مطهر الرمامة",
+                fontSize = 16.5.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextNavyDark,
                 textAlign = TextAlign.Center
             )
+            Text(
+                text = "تصميم وبرمجة الدكتور / مالك الرمامة",
+                fontSize = 16.5.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextNavyDark,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(2.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Color(0xFFE8F2FC))
                     .clickable {
                         try {
                             val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:771134103"))
@@ -316,18 +329,18 @@ fun MainFooterCard(
                             // ignore
                         }
                     }
-                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 6.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Phone,
                     contentDescription = "اتصال",
                     tint = HeaderBlueDark,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(17.dp)
                 )
-                Spacer(modifier = Modifier.width(6.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "هاتف / 771134103",
-                    fontSize = 17.sp,
+                    fontSize = 16.5.sp,
                     fontWeight = FontWeight.Bold,
                     color = HeaderBlueDark,
                     textAlign = TextAlign.Center
@@ -338,7 +351,7 @@ fun MainFooterCard(
 }
 
 /**
- * On-Screen Sub-Screen Permanent Branding Footer
+ * On-Screen Sub-Screen Permanent Branding Footer with navigation bar padding and elevated position
  */
 @Composable
 fun SubScreenBrandingFooter(
@@ -346,10 +359,14 @@ fun SubScreenBrandingFooter(
 ) {
     val context = LocalContext.current
     ClayCard(
-        modifier = modifier.fillMaxWidth(),
-        cornerRadius = 16.dp,
-        elevation = 3.dp,
-        backgroundColor = Color(0xFFF3F8FC)
+        modifier = modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(bottom = 12.dp),
+        cornerRadius = 18.dp,
+        elevation = 5.dp,
+        borderColor = ClayCardBorder,
+        backgroundColor = Color(0xFFFFFFFF)
     ) {
         Row(
             modifier = Modifier
@@ -362,19 +379,19 @@ fun SubScreenBrandingFooter(
                         // ignore
                     }
                 }
-                .padding(vertical = 10.dp, horizontal = 14.dp),
+                .padding(vertical = 12.dp, horizontal = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Phone,
-                contentDescription = null,
+                contentDescription = "اتصال",
                 tint = HeaderBlueDark,
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier.size(16.dp)
             )
-            Spacer(modifier = Modifier.width(6.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103",
+                text = "تصميم وبرمجة الدكتور / مالك الرمامة - هاتف / 771134103",
                 fontSize = 13.5.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextNavyDark,

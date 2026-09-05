@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,7 +61,16 @@ fun TriangleSimilarityScreen(
     var c1 by remember { mutableStateOf("10") }
     var a2 by remember { mutableStateOf("12") }
 
-    // Tab 1: Verify SSS similarity
+    // Tab 1: Find Triangle Area (أوجد مساحة المثلث)
+    var areaMethod by remember { mutableIntStateOf(0) } // 0: Base & Height, 1: 3 sides (Heron)
+    var triangleBase by remember { mutableStateOf("8") }
+    var triangleHeight by remember { mutableStateOf("6") }
+    var areaSideA by remember { mutableStateOf("6") }
+    var areaSideB by remember { mutableStateOf("8") }
+    var areaSideC by remember { mutableStateOf("10") }
+    var similarityKForArea by remember { mutableStateOf("") }
+
+    // Tab 2: Verify SSS similarity
     var s1a by remember { mutableStateOf("3") }
     var s1b by remember { mutableStateOf("4") }
     var s1c by remember { mutableStateOf("5") }
@@ -74,7 +84,11 @@ fun TriangleSimilarityScreen(
         modifier = modifier.fillMaxSize(),
         containerColor = ClayBackground,
         bottomBar = {
-            Box(modifier = Modifier.padding(16.dp)) {
+            Box(
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 14.dp)
+            ) {
                 SubScreenBrandingFooter()
             }
         }
@@ -114,7 +128,7 @@ fun TriangleSimilarityScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "حساب تناسب الأضلاع، معامل التشابه k، ونسب المساحات والمحيطات",
+                            text = "حساب تناسب الأضلاع، إيجاد مساحة المثلث، ونسب المساحات والمحيطات",
                             fontSize = 12.5.sp,
                             color = Color(0xFF4A657D)
                         )
@@ -123,49 +137,75 @@ fun TriangleSimilarityScreen(
                 }
             }
 
-            // Mode Selector Tabs
-            Row(
+            // Mode Selector Tabs (3 Options)
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ClayCard(
-                    modifier = Modifier.weight(1f),
-                    cornerRadius = 14.dp,
-                    elevation = if (selectedTab == 0) 5.dp else 2.dp,
-                    backgroundColor = if (selectedTab == 0) Color(0xFFE5F1FC) else Color(0xFFF7FAFD),
-                    borderColor = if (selectedTab == 0) TriangleBlue else Color(0xFFD6E4F0),
-                    onClick = {
-                        selectedTab = 0
-                        mathResult = null
-                    },
-                    testTag = "tab_similarity_calc"
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(
-                        text = "حساب الأضلاع ومعامل k",
-                        fontSize = 13.sp,
-                        fontWeight = if (selectedTab == 0) FontWeight.Bold else FontWeight.Normal,
-                        color = if (selectedTab == 0) TriangleBlue else TextNavyDark,
-                        modifier = Modifier.padding(vertical = 10.dp)
-                    )
+                    ClayCard(
+                        modifier = Modifier.weight(1f),
+                        cornerRadius = 14.dp,
+                        elevation = if (selectedTab == 0) 5.dp else 2.dp,
+                        backgroundColor = if (selectedTab == 0) Color(0xFFE5F1FC) else Color(0xFFF7FAFD),
+                        borderColor = if (selectedTab == 0) TriangleBlue else Color(0xFFD6E4F0),
+                        onClick = {
+                            selectedTab = 0
+                            mathResult = null
+                        },
+                        testTag = "tab_similarity_calc"
+                    ) {
+                        Text(
+                            text = "حساب الأضلاع و k",
+                            fontSize = 13.sp,
+                            fontWeight = if (selectedTab == 0) FontWeight.Bold else FontWeight.Normal,
+                            color = if (selectedTab == 0) TriangleBlue else TextNavyDark,
+                            modifier = Modifier.padding(vertical = 10.dp)
+                        )
+                    }
+
+                    ClayCard(
+                        modifier = Modifier.weight(1.15f),
+                        cornerRadius = 14.dp,
+                        elevation = if (selectedTab == 1) 5.dp else 2.dp,
+                        backgroundColor = if (selectedTab == 1) Color(0xFFE5F1FC) else Color(0xFFF7FAFD),
+                        borderColor = if (selectedTab == 1) TriangleBlue else Color(0xFFD6E4F0),
+                        onClick = {
+                            selectedTab = 1
+                            mathResult = null
+                        },
+                        testTag = "tab_triangle_area"
+                    ) {
+                        Text(
+                            text = "أوجد مساحة المثلث 📐",
+                            fontSize = 13.sp,
+                            fontWeight = if (selectedTab == 1) FontWeight.Bold else FontWeight.Normal,
+                            color = if (selectedTab == 1) TriangleBlue else TextNavyDark,
+                            modifier = Modifier.padding(vertical = 10.dp)
+                        )
+                    }
                 }
 
                 ClayCard(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.fillMaxWidth(),
                     cornerRadius = 14.dp,
-                    elevation = if (selectedTab == 1) 5.dp else 2.dp,
-                    backgroundColor = if (selectedTab == 1) Color(0xFFE5F1FC) else Color(0xFFF7FAFD),
-                    borderColor = if (selectedTab == 1) TriangleBlue else Color(0xFFD6E4F0),
+                    elevation = if (selectedTab == 2) 5.dp else 2.dp,
+                    backgroundColor = if (selectedTab == 2) Color(0xFFE5F1FC) else Color(0xFFF7FAFD),
+                    borderColor = if (selectedTab == 2) TriangleBlue else Color(0xFFD6E4F0),
                     onClick = {
-                        selectedTab = 1
+                        selectedTab = 2
                         mathResult = null
                     },
                     testTag = "tab_similarity_verify"
                 ) {
                     Text(
-                        text = "التحقق من التشابه (SSS)",
+                        text = "التحقق من التشابه بموجب الأضلاع (SSS)",
                         fontSize = 13.sp,
-                        fontWeight = if (selectedTab == 1) FontWeight.Bold else FontWeight.Normal,
-                        color = if (selectedTab == 1) TriangleBlue else TextNavyDark,
+                        fontWeight = if (selectedTab == 2) FontWeight.Bold else FontWeight.Normal,
+                        color = if (selectedTab == 2) TriangleBlue else TextNavyDark,
                         modifier = Modifier.padding(vertical = 10.dp)
                     )
                 }
@@ -234,6 +274,114 @@ fun TriangleSimilarityScreen(
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             testTag = "input_a2"
                         )
+                    } else if (selectedTab == 1) {
+                        // "أوجد مساحة المثلث"
+                        Text(
+                            text = "طريقة حساب مساحة المثلث:",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TextNavyDark
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            ClayCard(
+                                modifier = Modifier.weight(1f),
+                                cornerRadius = 12.dp,
+                                elevation = if (areaMethod == 0) 4.dp else 1.dp,
+                                backgroundColor = if (areaMethod == 0) Color(0xFFE5F1FC) else Color(0xFFF7FAFD),
+                                borderColor = if (areaMethod == 0) TriangleBlue else Color(0xFFD6E4F0),
+                                onClick = { areaMethod = 0 }
+                            ) {
+                                Text(
+                                    text = "القاعدة والارتفاع (½×ق×ع)",
+                                    fontSize = 12.sp,
+                                    fontWeight = if (areaMethod == 0) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (areaMethod == 0) TriangleBlue else TextNavyDark,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                                )
+                            }
+
+                            ClayCard(
+                                modifier = Modifier.weight(1f),
+                                cornerRadius = 12.dp,
+                                elevation = if (areaMethod == 1) 4.dp else 1.dp,
+                                backgroundColor = if (areaMethod == 1) Color(0xFFE5F1FC) else Color(0xFFF7FAFD),
+                                borderColor = if (areaMethod == 1) TriangleBlue else Color(0xFFD6E4F0),
+                                onClick = { areaMethod = 1 }
+                            ) {
+                                Text(
+                                    text = "الأضلاع الثلاثة (هيرون)",
+                                    fontSize = 12.sp,
+                                    fontWeight = if (areaMethod == 1) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (areaMethod == 1) TriangleBlue else TextNavyDark,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                                )
+                            }
+                        }
+
+                        if (areaMethod == 0) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                ClayInputField(
+                                    value = triangleBase,
+                                    onValueChange = { triangleBase = it },
+                                    label = "طول القاعدة (ق)",
+                                    placeholder = "مثال: 8",
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                    modifier = Modifier.weight(1f),
+                                    testTag = "input_area_base"
+                                )
+                                ClayInputField(
+                                    value = triangleHeight,
+                                    onValueChange = { triangleHeight = it },
+                                    label = "الارتفاع (ع)",
+                                    placeholder = "مثال: 6",
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                    modifier = Modifier.weight(1f),
+                                    testTag = "input_area_height"
+                                )
+                            }
+                        } else {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                ClayInputField(
+                                    value = areaSideA,
+                                    onValueChange = { areaSideA = it },
+                                    label = "الضلع أ",
+                                    placeholder = "مثال: 6",
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                    modifier = Modifier.weight(1f)
+                                )
+                                ClayInputField(
+                                    value = areaSideB,
+                                    onValueChange = { areaSideB = it },
+                                    label = "الضلع ب",
+                                    placeholder = "مثال: 8",
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                    modifier = Modifier.weight(1f)
+                                )
+                                ClayInputField(
+                                    value = areaSideC,
+                                    onValueChange = { areaSideC = it },
+                                    label = "الضلع ج",
+                                    placeholder = "مثال: 10",
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
+
+                        ClayInputField(
+                            value = similarityKForArea,
+                            onValueChange = { similarityKForArea = it },
+                            label = "معامل التشابه k (اختياري لحساب مساحة المشابه)",
+                            placeholder = "مثال: 2 (لحساب مساحة المشابه بنسبة k²)",
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            testTag = "input_area_k"
+                        )
                     } else {
                         Text(
                             text = "أضلاع المثلث الأول (أ₁ ، ب₁ ، ج₁):",
@@ -297,7 +445,7 @@ fun TriangleSimilarityScreen(
                     }
 
                     ClayButton(
-                        text = "حل المسألة",
+                        text = if (selectedTab == 1) "أوجد مساحة المثلث" else "حل المسألة",
                         icon = Icons.Default.Calculate,
                         backgroundColor = TriangleBlue,
                         onClick = {
@@ -307,6 +455,18 @@ fun TriangleSimilarityScreen(
                                 val vc1 = c1.toDoubleOrNull()
                                 val va2 = a2.toDoubleOrNull() ?: 1.0
                                 mathResult = MathSolvers.solveTriangleSides(va1, vb1, vc1, va2, null, null)
+                            } else if (selectedTab == 1) {
+                                val kVal = similarityKForArea.toDoubleOrNull()
+                                if (areaMethod == 0) {
+                                    val baseVal = triangleBase.toDoubleOrNull() ?: 0.0
+                                    val heightVal = triangleHeight.toDoubleOrNull() ?: 0.0
+                                    mathResult = MathSolvers.calculateTriangleAreaBaseHeight(baseVal, heightVal, kVal)
+                                } else {
+                                    val sa = areaSideA.toDoubleOrNull() ?: 0.0
+                                    val sb = areaSideB.toDoubleOrNull() ?: 0.0
+                                    val sc = areaSideC.toDoubleOrNull() ?: 0.0
+                                    mathResult = MathSolvers.calculateTriangleAreaHeron(sa, sb, sc, kVal)
+                                }
                             } else {
                                 val v1a = s1a.toDoubleOrNull() ?: 1.0
                                 val v1b = s1b.toDoubleOrNull() ?: 1.0
