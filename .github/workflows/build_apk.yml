@@ -1,0 +1,98 @@
+name: Build Android Release APK (Android 15)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Android APK (SDK 35)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK 17 (Eclipse Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: 🤖 Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🔑 Configure Keystore (if secret provided)
+        id: keystore-setup
+        run: |
+          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "Decoding Keystore from GitHub Secrets..."
+            echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > "${{ github.workspace }}/my-upload-key.jks"
+            echo "KEYSTORE_PATH=${{ github.workspace }}/my-upload-key.jks" >> $GITHUB_ENV
+            echo "HAS_KEYSTORE=true" >> $GITHUB_ENV
+          else
+            echo "No custom keystore secret found. Will generate release or debug APK."
+            echo "HAS_KEYSTORE=false" >> $GITHUB_ENV
+          fi
+
+      - name: 🔨 Grant Execute Permission to Gradle Wrapper (if present)
+        run: |
+          if [ -f "./gradlew" ]; then
+            chmod +x gradlew
+          fi
+
+      - name: 🚀 Build APK (Release & Debug Fallback)
+        env:
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          GRADLE_CMD="./gradlew"
+          if [ ! -f "./gradlew" ]; then
+            GRADLE_CMD="gradle"
+          fi
+          
+          echo "Using build runner: $GRADLE_CMD"
+          if [ "$HAS_KEYSTORE" = "true" ] && [ -n "${{ secrets.STORE_PASSWORD }}" ]; then
+            echo "Building signed Release APK..."
+            $GRADLE_CMD assembleRelease --stacktrace
+          else
+            echo "Building APK..."
+            $GRADLE_CMD assembleDebug assembleRelease || $GRADLE_CMD assembleDebug --stacktrace
+          fi
+
+      - name: 📦 Prepare APK Artifacts for Upload
+        id: prepare-apk
+        run: |
+          mkdir -p build_output
+          find app/build/outputs/apk/ -name "*.apk" -exec cp {} build_output/ \;
+          echo "Found APK files in output directory:"
+          ls -la build_output/
+          
+          # Rename release or debug APK for clean download
+          if [ -f build_output/*release*.apk ]; then
+            cp build_output/*release*.apk build_output/app-release.apk
+          elif [ -f build_output/*debug*.apk ]; then
+            cp build_output/*debug*.apk build_output/app-release.apk
+          fi
+
+      - name: 📤 Upload APK Artifact (Direct Download Link)
+        uses: actions/upload-artifact@v4
+        with:
+          name: DR_MALIK_Math_APK_v1.0
+          path: build_output/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: 📋 Summary Output
+        run: |
+          echo "### 🚀 Build Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "- **Application:** DR/MALIK Math (تطبيق الرياضيات التفاعلي)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target SDK:** Android 15 (API Level 35)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Artifact:** APK is available for download in the **Artifacts** section above." >> $GITHUB_STEP_SUMMARY
+          echo "- **Footer Brand:** تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103" >> $GITHUB_STEP_SUMMARY

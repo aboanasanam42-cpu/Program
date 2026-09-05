@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Soft shadow for main elements -->
+    <path
+        android:pathData="M38,32 L66,74 L22,74 Z"
+        android:fillColor="#223B6B92" />
+    <path
+        android:pathData="M68,44 L88,74 L56,74 Z"
+        android:fillColor="#222B7E62" />
+
+    <!-- Left Similar Triangle (Blue / Indigo) -->
+    <path
+        android:pathData="M36,28 L64,70 L20,70 Z"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeColor="#3F7EA8">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="20"
+                android:startY="28"
+                android:endX="64"
+                android:endY="70"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#E0EEFA" />
+                <item android:offset="1.0" android:color="#95C2E8" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Right Similar Triangle (Green / Mint) -->
+    <path
+        android:pathData="M66,40 L86,70 L54,70 Z"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeColor="#4EA684">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="40"
+                android:endX="86"
+                android:endY="70"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#E6F8F0" />
+                <item android:offset="1.0" android:color="#A7E1C7" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Division / Ratio Accent Bar -->
+    <path
+        android:pathData="M36,80 L72,80"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeColor="#3F7EA8" />
+    <path
+        android:pathData="M54,76 A2,2 0 1,0 54,75.9"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeColor="#4EA684" />
+    <path
+        android:pathData="M54,84 A2,2 0 1,0 54,83.9"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeColor="#E57A57" />
+
+</vector>

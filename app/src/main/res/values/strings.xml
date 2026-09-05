@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">DR/MALIK Math</string>
+    <string name="main_header_title">DR/MALIK</string>
+    <string name="footer_idea">فكرة أ / محمد الرميمة</string>
+    <string name="footer_dev">تصميم وبرمجة / مالك الرميمة</string>
+    <string name="footer_phone">هاتف / 771134103</string>
+    <string name="shared_footer_brand">تصميم وبرمجة الدكتور / مالك الرميمة - هاتف / 771134103</string>
+</resources>
