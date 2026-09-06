@@ -108,8 +108,8 @@ fun ExponentsRadicalsScreen(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "الأسس والجذور (Exponents & Radicals)",
-                            fontSize = 16.sp,
+                            text = "الأسس والجذور",
+                            fontSize = 17.sp,
                             fontWeight = FontWeight.Bold,
                             color = TextNavyDark
                         )
@@ -142,10 +142,11 @@ fun ExponentsRadicalsScreen(
                     testTag = "tab_exponents_calc"
                 ) {
                     Text(
-                        text = "حساب الأس (aⁿ)",
+                        text = "حساب الأس\n(أⁿ)",
                         fontSize = 12.sp,
                         fontWeight = if (selectedTab == 0) FontWeight.Bold else FontWeight.Normal,
                         color = if (selectedTab == 0) ExponentCoral else TextNavyDark,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
@@ -163,10 +164,11 @@ fun ExponentsRadicalsScreen(
                     testTag = "tab_radicals_simplify"
                 ) {
                     Text(
-                        text = "تبسيط الجذر (√N)",
+                        text = "تبسيط الجذر\n(√س)",
                         fontSize = 12.sp,
                         fontWeight = if (selectedTab == 1) FontWeight.Bold else FontWeight.Normal,
                         color = if (selectedTab == 1) ExponentCoral else TextNavyDark,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
@@ -184,10 +186,11 @@ fun ExponentsRadicalsScreen(
                     testTag = "tab_exponents_laws"
                 ) {
                     Text(
-                        text = "قوانين الأسس",
+                        text = "قوانين الأسس\n(أ^م ، أ^ن)",
                         fontSize = 12.sp,
                         fontWeight = if (selectedTab == 2) FontWeight.Bold else FontWeight.Normal,
                         color = if (selectedTab == 2) ExponentCoral else TextNavyDark,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
@@ -217,7 +220,7 @@ fun ExponentsRadicalsScreen(
                                 ClayInputField(
                                     value = baseVal,
                                     onValueChange = { baseVal = it },
-                                    label = "الأساس (a)",
+                                    label = "الأساس (أ)",
                                     placeholder = "مثال: 2 أو -3",
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                     modifier = Modifier.weight(1f),
@@ -226,7 +229,7 @@ fun ExponentsRadicalsScreen(
                                 ClayInputField(
                                     value = expVal,
                                     onValueChange = { expVal = it },
-                                    label = "الأس (n)",
+                                    label = "الأس (ن)",
                                     placeholder = "مثال: 5 أو -2",
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                     modifier = Modifier.weight(1f),
@@ -244,7 +247,7 @@ fun ExponentsRadicalsScreen(
                             ClayInputField(
                                 value = rootNumber,
                                 onValueChange = { rootNumber = it },
-                                label = "العدد تحت الجذر (N):",
+                                label = "العدد تحت الجذر (س):",
                                 placeholder = "مثال: 72 أو 50 أو 18",
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 testTag = "input_root_number"
@@ -267,10 +270,11 @@ fun ExponentsRadicalsScreen(
                                     onClick = { lawOperation = "multiply" }
                                 ) {
                                     Text(
-                                        text = "الضرب (aᵐ×aⁿ)",
+                                        text = "الضرب\n(أ^م × أ^ن)",
                                         fontSize = 11.5.sp,
                                         fontWeight = if (lawOperation == "multiply") FontWeight.Bold else FontWeight.Normal,
                                         color = if (lawOperation == "multiply") ExponentCoral else TextNavyDark,
+                                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                                         modifier = Modifier.padding(vertical = 8.dp)
                                     )
                                 }
@@ -283,10 +287,11 @@ fun ExponentsRadicalsScreen(
                                     onClick = { lawOperation = "divide" }
                                 ) {
                                     Text(
-                                        text = "القسمة (aᵐ÷aⁿ)",
+                                        text = "القسمة\n(أ^م ÷ أ^ن)",
                                         fontSize = 11.5.sp,
                                         fontWeight = if (lawOperation == "divide") FontWeight.Bold else FontWeight.Normal,
                                         color = if (lawOperation == "divide") ExponentCoral else TextNavyDark,
+                                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                                         modifier = Modifier.padding(vertical = 8.dp)
                                     )
                                 }
@@ -299,10 +304,11 @@ fun ExponentsRadicalsScreen(
                                     onClick = { lawOperation = "power" }
                                 ) {
                                     Text(
-                                        text = "القوة ((aᵐ)ⁿ)",
+                                        text = "القوة\n((أ^م)^ن)",
                                         fontSize = 11.5.sp,
                                         fontWeight = if (lawOperation == "power") FontWeight.Bold else FontWeight.Normal,
                                         color = if (lawOperation == "power") ExponentCoral else TextNavyDark,
+                                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                                         modifier = Modifier.padding(vertical = 8.dp)
                                     )
                                 }
@@ -312,7 +318,7 @@ fun ExponentsRadicalsScreen(
                                 ClayInputField(
                                     value = lawBase,
                                     onValueChange = { lawBase = it },
-                                    label = "الأساس المشترك (a)",
+                                    label = "الأساس المشترك (أ)",
                                     placeholder = "3",
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                     modifier = Modifier.weight(1f)
@@ -320,7 +326,7 @@ fun ExponentsRadicalsScreen(
                                 ClayInputField(
                                     value = lawM,
                                     onValueChange = { lawM = it },
-                                    label = "الأس الأول (m)",
+                                    label = "الأس الأول (م)",
                                     placeholder = "4",
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                     modifier = Modifier.weight(1f)
@@ -328,7 +334,7 @@ fun ExponentsRadicalsScreen(
                                 ClayInputField(
                                     value = lawN,
                                     onValueChange = { lawN = it },
-                                    label = "الأس الثاني (n)",
+                                    label = "الأس الثاني (ن)",
                                     placeholder = "2",
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                     modifier = Modifier.weight(1f)

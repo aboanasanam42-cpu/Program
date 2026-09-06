@@ -592,16 +592,16 @@ object MathSolvers {
     }
 
     // -------------------------------------------------------------
-    // 4. الأسس والجذور (Exponents & Radicals)
+    // 4. الأسس والجذور
     // -------------------------------------------------------------
     fun calculatePower(base: Double, exponent: Double): MathResult {
         val steps = mutableListOf<String>()
 
-        steps.add("الأساس (a) = ${formatNumber(base)} ، الأس (n) = ${formatNumber(exponent)}")
+        steps.add("الأساس (أ) = ${formatNumber(base)} ، الأس (ن) = ${formatNumber(exponent)}")
 
         when {
             exponent == 0.0 -> {
-                steps.add("أي عدد غير صفري مرفوع للأس صفر يساوي 1 دائماً (a⁰ = 1).")
+                steps.add("أي عدد غير صفري مرفوع للأس صفر يساوي 1 دائماً (أ⁰ = 1).")
                 return MathResult(
                     title = "حساب الأسس",
                     problemSummary = "(${formatNumber(base)})⁰",
@@ -613,7 +613,7 @@ object MathSolvers {
                 val posExp = -exponent
                 val posResult = base.pow(posExp)
                 val finalResult = 1.0 / posResult
-                steps.add("قاعدة الأس السالب: a⁻ⁿ = 1 ÷ aⁿ")
+                steps.add("قاعدة الأس السالب: أ^(-ن) = 1 ÷ أ^ن")
                 steps.add("(${formatNumber(base)})⁻${formatNumber(posExp)} = 1 ÷ (${formatNumber(base)})^${formatNumber(posExp)}")
                 steps.add("حساب المقام: (${formatNumber(base)})^${formatNumber(posExp)} = ${formatNumber(posResult)}")
                 steps.add("النتيجة = 1 ÷ ${formatNumber(posResult)} = ${formatNumber(finalResult)}")
@@ -627,7 +627,7 @@ object MathSolvers {
             exponent == exponent.roundToLong().toDouble() && exponent in 1.0..10.0 -> {
                 val expInt = exponent.toInt()
                 val expanded = List(expInt) { formatNumber(base) }.joinToString(" × ")
-                steps.add("الأس عدد صحيح موجب: تكرار ضرب الأساس في نفسه $expInt مرات")
+                steps.add("الأس عدد صحيح موجب: تكرار ضرب الأساس (أ) في نفسه $expInt مرات")
                 steps.add("(${formatNumber(base)})^$expInt = $expanded")
                 val result = base.pow(exponent)
                 steps.add("إتمام عملية الضرب = ${formatNumber(result)}")
@@ -659,11 +659,11 @@ object MathSolvers {
                 title = "تبسيط الجذور",
                 problemSummary = "√($number)",
                 steps = listOf("لا يوجد جذر حقيقي لعدد سالب في مجموعة الأعداد الحقيقية."),
-                finalAnswer = "قيمة غير معرفة في ℝ (عدد مركب: ${formatNumber(sqrt(abs(number).toDouble()))}i)"
+                finalAnswer = "قيمة غير معرفة في مجموعة الأعداد الحقيقية (ح) [عدد مركب: ${formatNumber(sqrt(abs(number).toDouble()))} ت]"
             )
         }
 
-        steps.add("العدد تحت الجذر: $number")
+        steps.add("العدد تحت الجذر (س): $number")
         val exactRoot = sqrt(number.toDouble())
 
         if (exactRoot == exactRoot.toLong().toDouble()) {
@@ -696,7 +696,7 @@ object MathSolvers {
             steps.add("تحليل العدد إلى حاصل ضرب أكبر مربع كامل وعامل آخر: $number = $square × $inside")
             steps.add("توزيع الجذر: √$number = √$square × √$inside")
             steps.add("استخراج المربع الكامل خارج الجذر: √$square = $outside")
-            steps.add("الصورة المبسطة الدقيقة: $outside√$inside")
+            steps.add("الصورة المبسطة الدقيقة (أ √ب): $outside√$inside")
         } else {
             steps.add("العدد $number لا يحتوي على عوامل مربعة كاملة، لذلك هو في أبسط صورة جذرية.")
         }
@@ -723,11 +723,11 @@ object MathSolvers {
 
         return when (operation) {
             "multiply" -> {
-                // a^m * a^n = a^(m+n)
-                steps.add("قانون ضرب القوى ذات الأساس المشترك: aᵐ × aⁿ = a^(m + n) (نجمع الأسس)")
+                // a^m * a^n = a^(m+n) -> أ^م × أ^ن = أ^(م + ن)
+                steps.add("قانون ضرب القوى ذات الأساس المشترك: أ^م × أ^ن = أ^(م + ن) (نجمع الأسس)")
                 val sumExp = m + n
                 steps.add("($baseStr)^$mStr × ($baseStr)^$nStr = ($baseStr)^($mStr + $nStr)")
-                steps.add("جمع الأسس: $mStr + $nStr = ${formatNumber(sumExp)}")
+                steps.add("جمع الأسس (م + ن): $mStr + $nStr = ${formatNumber(sumExp)}")
                 val result = base.pow(sumExp)
                 steps.add("حساب القيمة النهائية: ($baseStr)^${formatNumber(sumExp)} = ${formatNumber(result)}")
                 MathResult(
@@ -738,11 +738,11 @@ object MathSolvers {
                 )
             }
             "divide" -> {
-                // a^m / a^n = a^(m-n)
-                steps.add("قانون قسمة القوى ذات الأساس المشترك: aᵐ ÷ aⁿ = a^(m - n) (نطرح الأسس)")
+                // a^m / a^n = a^(m-n) -> أ^م ÷ أ^ن = أ^(م - ن)
+                steps.add("قانون قسمة القوى ذات الأساس المشترك: أ^م ÷ أ^ن = أ^(م - ن) (نطرح الأسس)")
                 val subExp = m - n
                 steps.add("($baseStr)^$mStr ÷ ($baseStr)^$nStr = ($baseStr)^($mStr - $nStr)")
-                steps.add("طرح الأسس: $mStr - $nStr = ${formatNumber(subExp)}")
+                steps.add("طرح الأسس (م - ن): $mStr - $nStr = ${formatNumber(subExp)}")
                 val result = base.pow(subExp)
                 steps.add("حساب القيمة النهائية: ($baseStr)^${formatNumber(subExp)} = ${formatNumber(result)}")
                 MathResult(
@@ -753,11 +753,11 @@ object MathSolvers {
                 )
             }
             else -> {
-                // (a^m)^n = a^(m*n)
-                steps.add("قانون قوة القوة: (aᵐ)ⁿ = a^(m × n) (نضرب الأسس)")
+                // (a^m)^n = a^(m*n) -> (أ^م)^ن = أ^(م × ن)
+                steps.add("قانون قوة القوة: (أ^م)^ن = أ^(م × ن) (نضرب الأسس)")
                 val multExp = m * n
                 steps.add("[($baseStr)^$mStr]^$nStr = ($baseStr)^($mStr × $nStr)")
-                steps.add("ضرب الأسس: $mStr × $nStr = ${formatNumber(multExp)}")
+                steps.add("ضرب الأسس (م × ن): $mStr × $nStr = ${formatNumber(multExp)}")
                 val result = base.pow(multExp)
                 steps.add("حساب القيمة النهائية: ($baseStr)^${formatNumber(multExp)} = ${formatNumber(result)}")
                 MathResult(

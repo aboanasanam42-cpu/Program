@@ -247,7 +247,7 @@ fun RatioIcon(modifier: Modifier = Modifier) {
 }
 
 /**
- * 4. الأسس والجذور: Exponents & Radicals (x² √x)
+ * 4. الأسس والجذور: (س² √س)
  */
 @Composable
 fun ExponentsRadicalsIcon(modifier: Modifier = Modifier) {
@@ -256,34 +256,32 @@ fun ExponentsRadicalsIcon(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // x² with 3D soft color
+        // س² with 3D soft color
         Box(contentAlignment = Alignment.Center) {
             Row(verticalAlignment = Alignment.Top) {
                 Text(
-                    text = "x",
+                    text = "س",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    fontFamily = FontFamily.Serif,
                     color = ExponentCoral,
-                    modifier = Modifier.offset(y = 4.dp)
+                    modifier = Modifier.offset(y = 2.dp)
                 )
                 Text(
-                    text = "2",
-                    fontSize = 17.sp,
+                    text = "²",
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = ExponentCoral
                 )
             }
         }
 
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
-        // √x
+        // √س
         Text(
-            text = "√x",
+            text = "√س",
             fontSize = 26.sp,
             fontWeight = FontWeight.ExtraBold,
-            fontFamily = FontFamily.Serif,
             color = ExponentCoral
         )
     }
