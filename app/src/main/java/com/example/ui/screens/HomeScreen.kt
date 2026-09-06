@@ -31,6 +31,7 @@ import com.example.ui.components.MainHeaderBar
 import com.example.ui.components.ProportionsIcon
 import com.example.ui.components.RatioIcon
 import com.example.ui.components.TriangleSimilarityIcon
+import com.example.ui.components.WordProblemsIcon
 import com.example.ui.theme.ExponentCoral
 import com.example.ui.theme.ExponentCoralLight
 import com.example.ui.theme.ProportionWood
@@ -40,13 +41,16 @@ import com.example.ui.theme.RatioTealLight
 import com.example.ui.theme.TextNavyDark
 import com.example.ui.theme.TriangleBlue
 import com.example.ui.theme.TriangleBlueLight
+import com.example.ui.theme.WordProblemPurple
+import com.example.ui.theme.WordProblemPurpleLight
 
 enum class MathSection {
     HOME,
     TRIANGLE_SIMILARITY,
     PROPORTIONS,
     RATIOS,
-    EXPONENTS_RADICALS
+    EXPONENTS_RADICALS,
+    WORD_PROBLEMS
 }
 
 @Composable
@@ -221,6 +225,48 @@ fun HomeScreen(
                                     lineHeight = 24.sp
                                 )
                             }
+                        }
+                    }
+
+                    // Row 3: المربع الخامس - المسائل اللفظية
+                    ClayCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(116.dp),
+                        cornerRadius = 28.dp,
+                        elevation = 8.dp,
+                        backgroundColor = WordProblemPurpleLight,
+                        borderColor = WordProblemPurple.copy(alpha = 0.45f),
+                        onClick = { onNavigateToSection(MathSection.WORD_PROBLEMS) },
+                        testTag = "card_word_problems"
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 20.dp, vertical = 14.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = "المسائل اللفظية",
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.Black,
+                                    color = WordProblemPurple
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "إدخال صوتي وكتابي مع حل مفصل للمسائل",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = TextNavyDark
+                                )
+                            }
+
+                            WordProblemsIcon()
                         }
                     }
                 }

@@ -40,6 +40,12 @@ val ExponentCoral = Color(0xFFDE6750)
 val ExponentCoralLight = Color(0xFFFEECE8)
 val ExponentAccent = Color(0xFFE88A6F)
 
+// 5. Word Problems (Pastel Violet & Royal Purple Smart Word Solver)
+val WordProblemPurple = Color(0xFF6C4AB6)
+val WordProblemPurpleLight = Color(0xFFF3EFFF)
+val WordProblemAccent = Color(0xFF8D72E1)
+val WordProblemCardBorder = Color(0xFFC7B8EA)
+
 // WhatsApp Brand Color
 val WhatsAppGreen = Color(0xFF25D366)
 val WhatsAppGreenDark = Color(0xFF128C7E)

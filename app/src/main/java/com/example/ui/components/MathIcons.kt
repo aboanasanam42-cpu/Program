@@ -42,6 +42,12 @@ import com.example.ui.theme.RatioDotGreen
 import com.example.ui.theme.RatioTeal
 import com.example.ui.theme.TriangleBlue
 import com.example.ui.theme.TriangleGreen
+import com.example.ui.theme.WordProblemAccent
+import com.example.ui.theme.WordProblemPurple
+import com.example.ui.theme.WordProblemPurpleLight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material3.Icon
 
 /**
  * 1. تشابه المثلثات: Similar Triangles (Blue & Green)
@@ -410,4 +416,85 @@ private fun MiniBtn(color: Color) {
             .clip(RoundedCornerShape(1.5.dp))
             .background(color)
     )
+}
+
+/**
+ * 5. المسائل اللفظية: Word Problems (Speech Bubble + Mic + Math Symbols)
+ */
+@Composable
+fun WordProblemsIcon(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.size(72.dp, 64.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        // Speech Bubble Canvas with Clay Shadow
+        Canvas(modifier = Modifier.size(56.dp, 48.dp)) {
+            val w = size.width
+            val h = size.height
+
+            // Bubble body
+            val bubblePath = Path().apply {
+                moveTo(10f, 0f)
+                lineTo(w - 10f, 0f)
+                cubicTo(w, 0f, w, 0f, w, 10f)
+                lineTo(w, h * 0.72f)
+                cubicTo(w, h * 0.86f, w, h * 0.86f, w - 10f, h * 0.86f)
+                lineTo(w * 0.45f, h * 0.86f)
+                lineTo(w * 0.28f, h) // bubble pointer
+                lineTo(w * 0.32f, h * 0.86f)
+                lineTo(10f, h * 0.86f)
+                cubicTo(0f, h * 0.86f, 0f, h * 0.86f, 0f, h * 0.72f)
+                lineTo(0f, 10f)
+                cubicTo(0f, 0f, 0f, 0f, 10f, 0f)
+                close()
+            }
+
+            // Fill bubble
+            drawPath(
+                path = bubblePath,
+                color = Color.White
+            )
+
+            // Border
+            drawPath(
+                path = bubblePath,
+                color = WordProblemPurple.copy(alpha = 0.35f),
+                style = Stroke(width = 2.5f)
+            )
+
+            // Two text lines inside bubble
+            drawLine(
+                color = Color(0xFF8E9BB0),
+                start = Offset(12f, 15f),
+                end = Offset(w - 16f, 15f),
+                strokeWidth = 3f,
+                cap = StrokeCap.Round
+            )
+            drawLine(
+                color = Color(0xFFA5B2C6),
+                start = Offset(12f, 25f),
+                end = Offset(w * 0.65f, 25f),
+                strokeWidth = 3f,
+                cap = StrokeCap.Round
+            )
+        }
+
+        // Circular Badge with Microphone in foreground
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = 2.dp, y = (-2).dp)
+                .size(28.dp)
+                .clip(CircleShape)
+                .background(WordProblemPurple),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.Mic,
+                contentDescription = "ميكروفون",
+                tint = Color.White,
+                modifier = Modifier.size(17.dp)
+            )
+        }
+    }
 }

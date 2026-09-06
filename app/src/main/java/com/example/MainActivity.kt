@@ -28,6 +28,7 @@ import com.example.ui.screens.MathSection
 import com.example.ui.screens.ProportionScreen
 import com.example.ui.screens.RatioScreen
 import com.example.ui.screens.TriangleSimilarityScreen
+import com.example.ui.screens.WordProblemsScreen
 import com.example.ui.theme.ClayBackground
 import com.example.ui.theme.MyApplicationTheme
 
@@ -98,6 +99,11 @@ fun DrMalikMathApp() {
             }
             MathSection.EXPONENTS_RADICALS -> {
                 ExponentsRadicalsScreen(
+                    onBack = { currentSection = MathSection.HOME }
+                )
+            }
+            MathSection.WORD_PROBLEMS -> {
+                WordProblemsScreen(
                     onBack = { currentSection = MathSection.HOME }
                 )
             }
