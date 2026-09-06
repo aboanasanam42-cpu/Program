@@ -246,15 +246,15 @@ object MathSolvers {
 
         if (unknownCount != 1) {
             return MathResult(
-                title = "حل التناسب",
-                problemSummary = "التناسب: A / B = C / D",
-                steps = listOf("يجب إدخال 3 قيم وترك قيمة واحدة مجهولة (x)."),
+                title = "حل التناسب (إيجاد مجهول واحد)",
+                problemSummary = "التناسب: أ / ب = جـ / د",
+                steps = listOf("يجب إدخال 3 قيم وترك قيمة واحدة مجهولة (س)."),
                 finalAnswer = "يرجى تحديد مجهول واحد فقط"
             )
         }
 
-        steps.add("التناسب المعطى: A / B = C / D")
-        steps.add("تطبيق قاعدة التناسب الأساسية: حاصل ضرب الطرفين = حاصل ضرب الوسطين (A × D = B × C)")
+        steps.add("التناسب المعطى: أ / ب = جـ / د")
+        steps.add("تطبيق خاصية التناسب الأساسية: حاصل ضرب الطرفين = حاصل ضرب الوسطين (أ × د = ب × جـ)")
 
         val finalX: Double
         val unknownName: String
@@ -262,51 +262,191 @@ object MathSolvers {
 
         when {
             a == null -> {
-                unknownName = "A (الطرف الأول)"
+                unknownName = "الطرف الأول (أ)"
                 val num = b!! * c!!
                 finalX = num / d!!
-                equationStr = "A = (B × C) ÷ D = (${formatNumber(b)} × ${formatNumber(c)}) ÷ ${formatNumber(d)}"
-                steps.add("عزل المجهول A: $equationStr")
-                steps.add("A = ${formatNumber(num)} ÷ ${formatNumber(d)} = ${formatNumber(finalX)}")
+                equationStr = "س (أ) = (ب × جـ) ÷ د = (${formatNumber(b)} × ${formatNumber(c)}) ÷ ${formatNumber(d)}"
+                steps.add("عزل المجهول: $equationStr")
+                steps.add("س = ${formatNumber(num)} ÷ ${formatNumber(d)} = ${formatNumber(finalX)}")
             }
             b == null -> {
-                unknownName = "B (الوسط الأول)"
+                unknownName = "الوسط الأول (ب)"
                 val num = a * d!!
                 finalX = num / c!!
-                equationStr = "B = (A × D) ÷ C = (${formatNumber(a)} × ${formatNumber(d)}) ÷ ${formatNumber(c)}"
-                steps.add("عزل المجهول B: $equationStr")
-                steps.add("B = ${formatNumber(num)} ÷ ${formatNumber(c)} = ${formatNumber(finalX)}")
+                equationStr = "س (ب) = (أ × د) ÷ جـ = (${formatNumber(a)} × ${formatNumber(d)}) ÷ ${formatNumber(c)}"
+                steps.add("عزل المجهول: $equationStr")
+                steps.add("س = ${formatNumber(num)} ÷ ${formatNumber(c)} = ${formatNumber(finalX)}")
             }
             c == null -> {
-                unknownName = "C (الوسط الثاني)"
+                unknownName = "الوسط الثاني (جـ)"
                 val num = a * d!!
                 finalX = num / b
-                equationStr = "C = (A × D) ÷ B = (${formatNumber(a)} × ${formatNumber(d)}) ÷ ${formatNumber(b)}"
-                steps.add("عزل المجهول C: $equationStr")
-                steps.add("C = ${formatNumber(num)} ÷ ${formatNumber(b)} = ${formatNumber(finalX)}")
+                equationStr = "س (جـ) = (أ × د) ÷ ب = (${formatNumber(a)} × ${formatNumber(d)}) ÷ ${formatNumber(b)}"
+                steps.add("عزل المجهول: $equationStr")
+                steps.add("س = ${formatNumber(num)} ÷ ${formatNumber(b)} = ${formatNumber(finalX)}")
             }
             else -> {
-                unknownName = "D (الطرف الثاني)"
+                unknownName = "الطرف الثاني (د)"
                 val num = b * c
                 finalX = num / a
-                equationStr = "D = (B × C) ÷ A = (${formatNumber(b)} × ${formatNumber(c)}) ÷ ${formatNumber(a)}"
-                steps.add("عزل المجهول D: $equationStr")
-                steps.add("D = ${formatNumber(num)} ÷ ${formatNumber(a)} = ${formatNumber(finalX)}")
+                equationStr = "س (د) = (ب × جـ) ÷ أ = (${formatNumber(b)} × ${formatNumber(c)}) ÷ ${formatNumber(a)}"
+                steps.add("عزل المجهول: $equationStr")
+                steps.add("س = ${formatNumber(num)} ÷ ${formatNumber(a)} = ${formatNumber(finalX)}")
             }
         }
 
-        val aStr = if (a == null) "x" else formatNumber(a)
-        val bStr = if (b == null) "x" else formatNumber(b)
-        val cStr = if (c == null) "x" else formatNumber(c)
-        val dStr = if (d == null) "x" else formatNumber(d)
+        val aStr = if (a == null) "س" else formatNumber(a)
+        val bStr = if (b == null) "س" else formatNumber(b)
+        val cStr = if (c == null) "س" else formatNumber(c)
+        val dStr = if (d == null) "س" else formatNumber(d)
 
         steps.add("التحقق بالتعويض: ($aStr ÷ $bStr) = ($cStr ÷ $dStr)")
 
         return MathResult(
-            title = "حل التناسب (إيجاد الحد المجهول)",
-            problemSummary = "المعادلة: $aStr / $bStr = $cStr / $dStr",
+            title = "حل التناسب (إيجاد الحد المجهول س)",
+            problemSummary = "معادلة التناسب: $aStr / $bStr = $cStr / $dStr",
             steps = steps,
-            finalAnswer = "قيمة المجهول $unknownName = ${formatNumber(finalX)}"
+            finalAnswer = "قيمة المجهول $unknownName: س = ${formatNumber(finalX)}"
+        )
+    }
+
+    /**
+     * إيجاد مجهولين في التناسب باستخدام خواص التناسب (المجموع والفرق):
+     * س / أ = ص / ب ، مع معلومية: م·س ± ن·ص = القيمة
+     */
+    fun solveProportionTwoUnknownsWithSumDiff(
+        denomA: Double,
+        denomB: Double,
+        coeffS: Double = 1.0,
+        coeffY: Double = 1.0,
+        isAddition: Boolean = true,
+        resultValue: Double
+    ): MathResult {
+        val steps = mutableListOf<String>()
+
+        if (denomA == 0.0 || denomB == 0.0) {
+            return MathResult(
+                title = "إيجاد مجهولين في التناسب",
+                problemSummary = "س / أ = ص / ب",
+                steps = listOf("لا يمكن أن يكون مقام النسبة مساوياً للصفر (أ ≠ 0 ، ب ≠ 0)."),
+                finalAnswer = "قيم غير صحيحة"
+            )
+        }
+
+        val aF = formatNumber(denomA)
+        val bF = formatNumber(denomB)
+        val resF = formatNumber(resultValue)
+        val opSymbol = if (isAddition) "+" else "-"
+
+        val coeffSStr = if (coeffS == 1.0) "" else "${formatNumber(coeffS)}"
+        val coeffYStr = if (coeffY == 1.0) "" else "${formatNumber(coeffY)}"
+        val eqDisplay = "${coeffSStr}س $opSymbol ${coeffYStr}ص = $resF"
+
+        steps.add("التناسب المعطى: س / $aF = ص / $bF = ك (حيث ك هو ثابت التناسب)")
+        steps.add("المعادلة المعطاة بين المجهولين: $eqDisplay")
+        steps.add("التعبير عن المجهولين بدلالة ثابت التناسب (ك):")
+        steps.add("• س = $aF × ك")
+        steps.add("• ص = $bF × ك")
+
+        val effectiveDenominator = if (isAddition) {
+            (coeffS * denomA) + (coeffY * denomB)
+        } else {
+            (coeffS * denomA) - (coeffY * denomB)
+        }
+
+        if (abs(effectiveDenominator) < 0.000001) {
+            return MathResult(
+                title = "إيجاد مجهولين في التناسب",
+                problemSummary = "س / $aF = ص / $bF\n$eqDisplay",
+                steps = listOf("المقام المشترك للتعويض يساوي صفراً، لا يوجد حل وحيد."),
+                finalAnswer = "مقام غير معرف"
+            )
+        }
+
+        steps.add("التعويض في المعادلة المعطاة:")
+        steps.add("($coeffSStr($aF × ك)) $opSymbol ($coeffYStr($bF × ك)) = $resF")
+        steps.add("ك × [(${formatNumber(coeffS * denomA)}) $opSymbol (${formatNumber(coeffY * denomB)})] = $resF")
+        steps.add("ك × ${formatNumber(effectiveDenominator)} = $resF")
+
+        val k = resultValue / effectiveDenominator
+        val kF = formatNumber(k)
+        steps.add("ثابت التناسب ك = $resF ÷ ${formatNumber(effectiveDenominator)} = $kF")
+
+        val valS = denomA * k
+        val valY = denomB * k
+        val sF = formatNumber(valS)
+        val yF = formatNumber(valY)
+
+        steps.add("حساب قيمة المجهول الأول (س):")
+        steps.add("س = أ × ك = $aF × $kF = $sF")
+
+        steps.add("حساب قيمة المجهول الثاني (ص):")
+        steps.add("ص = ب × ك = $bF × $kF = $yF")
+
+        steps.add("التحقق من صحة الحل:")
+        steps.add("• التناسب: $sF ÷ $aF = $kF ، و $yF ÷ $bF = $kF (متساويان)")
+        val checkVal = if (isAddition) (coeffS * valS) + (coeffY * valY) else (coeffS * valS) - (coeffY * valY)
+        steps.add("• المعادلة: ${formatNumber(checkVal)} = $resF ✓")
+
+        return MathResult(
+            title = "إيجاد مجهولين في التناسب (س ، ص)",
+            problemSummary = "التناسب: س / $aF = ص / $bF\nالمعادلة: $eqDisplay",
+            steps = steps,
+            finalAnswer = "س = $sF\nص = $yF\n(ثابت التناسب ك = $kF)"
+        )
+    }
+
+    /**
+     * إيجاد مجهولين في التناسب المتسلسل (سلسلة نسب متساوية):
+     * س / أ = جـ / د = ص / هـ
+     */
+    fun solveChainedProportionTwoUnknowns(
+        denomS: Double,
+        numKnown: Double,
+        denomKnown: Double,
+        denomY: Double
+    ): MathResult {
+        val steps = mutableListOf<String>()
+
+        if (denomS == 0.0 || denomKnown == 0.0 || denomY == 0.0) {
+            return MathResult(
+                title = "إيجاد مجهولين (تناسب متسلسل)",
+                problemSummary = "س / أ = جـ / د = ص / هـ",
+                steps = listOf("لا يمكن أن تكون المقامات مساوية للصفر."),
+                finalAnswer = "قيم غير صحيحة"
+            )
+        }
+
+        val aF = formatNumber(denomS)
+        val cF = formatNumber(numKnown)
+        val dF = formatNumber(denomKnown)
+        val eF = formatNumber(denomY)
+
+        steps.add("سلسلة النسب المعطاة: س / $aF = $cF / $dF = ص / $eF")
+
+        val k = numKnown / denomKnown
+        val kF = formatNumber(k)
+        steps.add("1. حساب ثابت التناسب (ك) من النسبة المعلومة في الوسط:")
+        steps.add("ك = $cF ÷ $dF = $kF")
+
+        val valS = denomS * k
+        val sF = formatNumber(valS)
+        steps.add("2. إيجاد المجهول الأول (س):")
+        steps.add("س / $aF = ك  =>  س = $aF × $kF = $sF")
+
+        val valY = denomY * k
+        val yF = formatNumber(valY)
+        steps.add("3. إيجاد المجهول الثاني (ص):")
+        steps.add("ص / $eF = ك  =>  ص = $eF × $kF = $yF")
+
+        steps.add("التحقق من تساوي النسب الثلاث:")
+        steps.add("$sF / $aF = $cF / $dF = $yF / $eF = $kF ✓")
+
+        return MathResult(
+            title = "إيجاد مجهولين في التناسب المتسلسل",
+            problemSummary = "التناسب: س / $aF = $cF / $dF = ص / $eF",
+            steps = steps,
+            finalAnswer = "س = $sF\nص = $yF\n(ثابت التناسب ك = $kF)"
         )
     }
 
@@ -316,29 +456,53 @@ object MathSolvers {
         val steps = mutableListOf<String>()
         val propTypeStr = if (isDirect) "تناسب طردي" else "تناسب عكسي"
 
+        val x1F = formatNumber(x1)
+        val y1F = formatNumber(y1)
+        val x2F = formatNumber(x2)
+
         if (isDirect) {
-            steps.add("في التناسب الطردي: النسبة بين المتغيرين ثابتة (y₁ ÷ x₁ = y₂ ÷ x₂ = k)")
+            if (x1 == 0.0) {
+                return MathResult(
+                    title = "التناسب الطردي",
+                    problemSummary = "س₁ = $x1F يقابلها ص₁ = $y1F",
+                    steps = listOf("لا يمكن القسمة على س₁ = 0 في التناسب الطردي."),
+                    finalAnswer = "قيمة غير صحيحة"
+                )
+            }
+            steps.add("قاعدة التناسب الطردي: النسبة بين المتغيرين ثابتة (ص₁ ÷ س₁ = ص₂ ÷ س₂ = ك)")
             val k = y1 / x1
-            steps.add("ثابت التناسب الطردي k = ${formatNumber(y1)} ÷ ${formatNumber(x1)} = ${formatNumber(k)}")
+            val kF = formatNumber(k)
+            steps.add("ثابت التناسب الطردي (ك) = ص₁ ÷ س₁ = $y1F ÷ $x1F = $kF")
             val y2 = k * x2
-            steps.add("حساب y₂ عند x₂ = ${formatNumber(x2)}: y₂ = k × x₂ = ${formatNumber(k)} × ${formatNumber(x2)} = ${formatNumber(y2)}")
+            val y2F = formatNumber(y2)
+            steps.add("حساب ص₂ عند س₂ = $x2F: ص₂ = ك × س₂ = $kF × $x2F = $y2F")
             return MathResult(
                 title = "التناسب الطردي",
-                problemSummary = "x₁ = ${formatNumber(x1)} يقابلها y₁ = ${formatNumber(y1)}\nالمطلوب: إيجاد y₂ عندما x₂ = ${formatNumber(x2)}",
+                problemSummary = "س₁ = $x1F يقابلها ص₁ = $y1F\nالمطلوب: إيجاد ص₂ عندما س₂ = $x2F",
                 steps = steps,
-                finalAnswer = "y₂ = ${formatNumber(y2)} (ثابت التناسب k = ${formatNumber(k)})"
+                finalAnswer = "ص₂ = $y2F (ثابت التناسب ك = $kF)"
             )
         } else {
-            steps.add("في التناسب العكسي: حاصل ضرب المتغيرين ثابت (x₁ × y₁ = x₂ × y₂ = k)")
+            if (x2 == 0.0) {
+                return MathResult(
+                    title = "التناسب العكسي",
+                    problemSummary = "س₁ = $x1F يقابلها ص₁ = $y1F",
+                    steps = listOf("لا يمكن القسمة على س₂ = 0 في التناسب العكسي."),
+                    finalAnswer = "قيمة غير صحيحة"
+                )
+            }
+            steps.add("قاعدة التناسب العكسي: حاصل ضرب المتغيرين ثابت (س₁ × ص₁ = س₂ × ص₂ = ك)")
             val k = x1 * y1
-            steps.add("ثابت التناسب العكسي k = ${formatNumber(x1)} × ${formatNumber(y1)} = ${formatNumber(k)}")
+            val kF = formatNumber(k)
+            steps.add("ثابت التناسب العكسي (ك) = س₁ × ص₁ = $x1F × $y1F = $kF")
             val y2 = k / x2
-            steps.add("حساب y₂ عند x₂ = ${formatNumber(x2)}: y₂ = k ÷ x₂ = ${formatNumber(k)} ÷ ${formatNumber(x2)} = ${formatNumber(y2)}")
+            val y2F = formatNumber(y2)
+            steps.add("حساب ص₂ عند س₂ = $x2F: ص₂ = ك ÷ س₂ = $kF ÷ $x2F = $y2F")
             return MathResult(
                 title = "التناسب العكسي",
-                problemSummary = "x₁ = ${formatNumber(x1)} يقابلها y₁ = ${formatNumber(y1)}\nالمطلوب: إيجاد y₂ عندما x₂ = ${formatNumber(x2)}",
+                problemSummary = "س₁ = $x1F يقابلها ص₁ = $y1F\nالمطلوب: إيجاد ص₂ عندما س₂ = $x2F",
                 steps = steps,
-                finalAnswer = "y₂ = ${formatNumber(y2)} (ثابت التناسب k = ${formatNumber(k)})"
+                finalAnswer = "ص₂ = $y2F (ثابت التناسب ك = $kF)"
             )
         }
     }

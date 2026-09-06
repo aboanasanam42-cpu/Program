@@ -29,6 +29,34 @@ class ExampleRobolectricTest {
   }
 
   @Test
+  fun `test math solver proportion two unknowns with sum`() {
+    // s/3 = y/5, s + y = 40 => s = 15, y = 25
+    val result = MathSolvers.solveProportionTwoUnknownsWithSumDiff(
+        denomA = 3.0,
+        denomB = 5.0,
+        coeffS = 1.0,
+        coeffY = 1.0,
+        isAddition = true,
+        resultValue = 40.0
+    )
+    assertTrue(result.finalAnswer.contains("15"))
+    assertTrue(result.finalAnswer.contains("25"))
+  }
+
+  @Test
+  fun `test math solver proportion two unknowns chained`() {
+    // s/4 = 15/5 = y/7 => s = 12, y = 21
+    val result = MathSolvers.solveChainedProportionTwoUnknowns(
+        denomS = 4.0,
+        numKnown = 15.0,
+        denomKnown = 5.0,
+        denomY = 7.0
+    )
+    assertTrue(result.finalAnswer.contains("12"))
+    assertTrue(result.finalAnswer.contains("21"))
+  }
+
+  @Test
   fun `test math solver ratio simplification`() {
     // 24 : 36  => 2 : 3
     val result = MathSolvers.simplifyRatio(24.0, 36.0)
